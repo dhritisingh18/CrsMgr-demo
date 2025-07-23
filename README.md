@@ -15,7 +15,7 @@
 - 📤 Grade export in CSV format
 - ⏱️ Quiz buffer time handling based on number of questions
 - 🔐 Role-based access (Admin, Professor, Student)
-- 📊 Alphabetical sorting of students, including late registrants
+- 📊 Alphabetical sorting of students, including late registrants for ease of uploading grades
 
 ---
 
