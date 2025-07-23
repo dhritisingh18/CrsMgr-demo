@@ -1,6 +1,8 @@
 ## 🧩 What is CrsMgr?
 
-**CrsMgr (Course Manager)** is a web-based academic course management system developed at Concordia University. It is designed to assist instructors with managing project-based university courses efficiently. The platform handles everything from group assignments and file submissions to automated grading and peer evaluation.
+**CrsMgr (Course Manager)** is a web-based academic course management system developed at Concordia
+ University by Dr. B.C. Desai and his graduate students to streamline the administration
+ of project-based courses at the university level. It is designed to assist instructors with managing project-based university courses efficiently. The platform handles everything from group assignments and file submissions to automated grading and peer evaluation.
 
 ### ✅ Key Features
 
