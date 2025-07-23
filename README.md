@@ -1,118 +1,240 @@
+## 🧩 What is CrsMgr?
 
-# 📘 CrsMgr System – Installation Guide (Windows)
+**CrsMgr (Course Manager)** is a web-based academic course management system developed at Concordia University. It is designed to assist instructors with managing project-based university courses efficiently. The platform handles everything from group assignments and file submissions to automated grading and peer evaluation.
 
-## 🔧 Introduction
+### ✅ Key Features
 
-**CrsMgr** (Course Manager System) is a web-based platform developed at Concordia University to manage project-based courses with features like assignment submissions, peer evaluation, WBA (Worst-by-Average) grading, automated grade calculation, CSV export, and more. This README provides step-by-step instructions to install and configure CrsMgr on a Windows machine using **XAMPP**.
-
----
-
-## 🖥️ System Requirements
-
-- Windows 10/11
-- XAMPP (includes Apache, MySQL, PHP)
-- Web Browser (Chrome/Firefox recommended)
-
----
-
-## 📥 Step 1: Install Apache, MySQL, and PHP (XAMPP)
-
-1. **Download XAMPP**:
-   - Visit: [https://www.apachefriends.org/en/xampp-windows.html](https://www.apachefriends.org/en/xampp-windows.html)
-   - Choose the **latest version** and download the **EXE (7-ZIP)** Self-extracting archive.
-
-2. **Extract XAMPP**:
-   - Extract the package to `C:/xampp` or the root of another partition (recommended for path simplicity).
-
-3. **Start Servers**:
-   - Run `xampp-control.exe` from the `C:/xampp` directory.
-   - Start **Apache** and **MySQL**.
-   - Confirm by visiting: [http://localhost](http://localhost)
+- 🏫 Course and session setup
+- 👥 Group formation and student enrollment
+- 🧑‍🏫 Professor assignment
+- 📝 Assignment submissions and file uploads (up to 25MB)
+- 🔁 Peer review system with configurable forgiveness logic
+- 🧮 Automated grading using Worst-by-Average (WBA) logic
+- 📤 Grade export in CSV format
+- ⏱️ Quiz buffer time handling based on number of questions
+- 🔐 Role-based access (Admin, Professor, Student)
+- 📊 Alphabetical sorting of students, including late registrants
 
 ---
 
-## 📁 Step 2: Install CrsMgr System
+## 🖥️ What You’ll Need
 
-1. **Download CrsMgr**:
-   - Use the demo or full version from:
-     [https://crsmgr.encs.concordia.ca/crsmgr](https://crsmgr.encs.concordia.ca/crsmgr)
+| Component       | Purpose                                    |
+|----------------|--------------------------------------------|
+| Apache Server  | To host the CrsMgr website locally         |
+| MySQL/MariaDB  | To store student, course, and grade data   |
+| PHP            | To run the server-side logic               |
+| Web Browser    | To interact with the system                |
+| Terminal       | For manual database setup (no `setup.php`) |
 
-2. **Extract to XAMPP Directory**:
-   - Extract the contents into:
+---
+
+## 🧰 Step 1: Install Required Software
+
+### 🔹 Windows (using XAMPP)
+
+1. Download **XAMPP** from  
+   [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)
+
+2. Install XAMPP and launch the **XAMPP Control Panel**
+
+3. Start these two services:  
+   ✅ Apache  
+   ✅ MySQL
+
+---
+
+### 🔹 Linux (Ubuntu/Debian)
+
+1. Open a terminal and run:
+
+   ```bash
+   sudo apt update
+   sudo apt install apache2 mysql-server php libapache2-mod-php php-mysql unzip
+   ```
+
+2. Start Apache and MySQL:
+
+   ```bash
+   sudo systemctl start apache2
+   sudo systemctl start mysql
+   ```
+
+3. Optional: Enable them to start on boot:
+
+   ```bash
+   sudo systemctl enable apache2
+   sudo systemctl enable mysql
+   ```
+
+---
+
+## 📁 Step 2: Place the CrsMgr Files
+
+1. Copy or download the `CrsMgr` project folder.
+
+2. Move it into your web server directory:
+
+   - **Windows**:  
+     Place it in  
      ```
      C:/xampp/htdocs/crsmgr/
      ```
 
-3. **Database Setup**:
-   - Open your browser and navigate to:
+   - **Linux**:  
+     Run:
+     ```bash
+     sudo cp -r CrsMgr /var/www/html/crsmgr
+     sudo chown -R www-data:www-data /var/www/html/crsmgr
+     sudo chmod -R 755 /var/www/html/crsmgr
      ```
-     http://localhost/crsmgr/setup.php
-     ```
-   - Follow the instructions to:
-     - Create the database (default name: `crsmgr`)
-     - Configure tables
-     - Set up admin account
-
-4. **Final Installation Step**:
-   - Access the system at:
-     ```
-     http://localhost/crsmgr/
-     ```
-   - Log in using the created credentials.
 
 ---
 
-## ✅ Features & Enhancements (as per latest update)
+## 🗃️ Step 3: Create and Initialize the Database
 
-- ✅ Upload files up to **25MB** (PHP-FPM configuration updated)
-- ✅ **WBA (Worst-by-Average)** logic configurable for 1, 2, or 3 lowest marks
-- ✅ **CSV export**: Clean file with Student ID, Last Name, First Name, Letter Grade
-- ✅ Alphabetical sorting of students including late registrants
-- ✅ Accurate **peer review attribution** to reviewees (not reviewers)
-- ✅ **Peer forgiveness logic**: One missing peer review can be averaged
-- ✅ Enhanced **quiz time buffer logic** (based on quiz time & number of questions)
-- ✅ Improved exception handling and user experience
+### ✅ 1. Create the database
 
----
-
-## 🛠️ Configuration Notes (PHP File Upload Limits)
-
-Ensure the following is correctly set (especially if using PHP-FPM):
-
-### Edit `/etc/php-fpm.d/www.conf`:
-```
-php_admin_value[upload_max_filesize] = 25M
-php_admin_value[post_max_size] = 26M
-php_admin_value[upload_tmp_dir] = /tmp/CrsMgr
+```bash
+mysql -u root -p
 ```
 
----
+Inside the MySQL prompt:
 
-## 📤 Exporting Grades
+```sql
+CREATE DATABASE crsmgr;
+USE crsmgr;
+```
 
-You can download the grades CSV:
-- Click **"Create Grade CSV"** on the UI
-- Now supports **sorting by Last Name or Student ID**
+### ✅ 2. Import table structure
 
----
+Exit MySQL prompt and run from terminal:
 
-## 🧪 Testing Tips
+```bash
+mysql -u root -p crsmgr < /path/to/tables-desc.sql
+```
 
-Use:
-- Upload sample files (individual/group) up to 25MB
-- Test peer review visibility
-- Check CSV output format
-- Validate WBA updates and grade reflection
-
----
-
-## 🔒 Notes
-
-- Ensure `htdocs/crsmgr` folder has appropriate read/write permissions.
-- MySQL user must have privileges to create and alter the `crsmgr` database.
+> Replace `/path/to/` with the actual path to the `tables-desc.sql` file.
 
 ---
 
-## 📞 Support
+## 👤 Step 4: Manually Add an Admin User
 
-For issues, contact the course administrator or your system supervisor (e.g., Dr. Bipin Desai at Concordia University).
+Login to MySQL:
+
+```bash
+mysql -u root -p
+USE crsmgr;
+```
+
+Run:
+
+```sql
+INSERT INTO USER (USER_ID, USER_NAME, PASSWORD, ACCESS_PRIV)
+VALUES (1000, 'admin', 'admin123', 'A');
+```
+
+| Field         | Meaning                          |
+|---------------|----------------------------------|
+| `USER_ID`     | Must be unique (e.g., 1000)      |
+| `USER_NAME`   | Username for login               |
+| `PASSWORD`    | Password (plaintext)             |
+| `ACCESS_PRIV` | `'A'` = Admin, `'P'` = Professor |
+
+---
+
+## 🌐 Step 5: Access the System
+
+Open a web browser and go to:
+
+```
+http://localhost/crsmgr/
+```
+
+Log in with:
+
+- **Username**: `admin`  
+- **Password**: `admin123`
+
+You should now be able to use the full CrsMgr system.
+
+---
+
+## 🔧 Optional: Increase Upload Limit
+
+### Linux (PHP-FPM based):
+
+1. Edit PHP-FPM config:
+
+   ```bash
+   sudo nano /etc/php/7.x/fpm/php.ini
+   sudo nano /etc/php-fpm.d/www.conf
+   ```
+
+   Add or modify:
+
+   ```
+   upload_max_filesize = 25M
+   post_max_size = 26M
+   ```
+
+   In `www.conf`, under `[www]`:
+
+   ```
+   php_admin_value[upload_max_filesize] = 25M
+   php_admin_value[post_max_size] = 26M
+   php_admin_value[upload_tmp_dir] = /tmp/CrsMgr
+   ```
+
+2. Restart services:
+
+   ```bash
+   sudo systemctl restart php7.x-fpm
+   sudo systemctl restart apache2
+   ```
+
+---
+
+## 📄 Understand Database Schema
+
+- `tables-desc.sql`: SQL structure to create all necessary tables
+- `tables-desc.txt`: Text description of each table and its purpose
+
+View with:
+
+```bash
+cat tables-desc.txt
+```
+
+---
+
+## 🧪 Testing Checklist
+
+| Task                     | What to Do                               |
+|--------------------------|------------------------------------------|
+| Login                    | Use `/crsmgr/` → admin/admin123          |
+| Add courses and students | Use Admin panel                          |
+| Peer review              | Assign groups, submit reviews            |
+| Upload test files        | Try uploading PDF/ZIP ≤ 25MB             |
+| Export grades            | Click **Create Grade CSV**               |
+
+---
+
+## 🛠️ Troubleshooting
+
+| Problem                 | Likely Cause or Fix                                |
+|------------------------|-----------------------------------------------------|
+| Page not found         | Check Apache is running and correct path used      |
+| Table not found errors | Ensure `tables-desc.sql` was imported correctly     |
+| Login doesn’t work     | Check if admin user was inserted into `USER` table |
+| File upload fails      | Verify `upload_max_filesize` and `post_max_size`   |
+
+---
+
+## 📞 Help & Contact
+
+For questions or issues, contact:
+
+**Dr. Bipin C. Desai**  
+Concordia University  
+📧 BipinC.Desai@concordia.ca
