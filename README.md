@@ -237,4 +237,4 @@ For questions or issues, contact:
 
 **Dr. Bipin C. Desai**  
 Concordia University  
-📧 BipinC.Desai@concordia.ca
+📧 BipinC.Desai@concordia.ca / dhritisingh3@gmail.com
